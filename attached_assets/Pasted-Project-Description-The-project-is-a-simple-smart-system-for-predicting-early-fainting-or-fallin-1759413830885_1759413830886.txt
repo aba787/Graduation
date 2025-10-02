@@ -1,0 +1,60 @@
+Project Description
+
+The project is a simple, smart system for predicting early fainting or falling using a wearable device (a small bracelet/unit) equipped with biometric sensors such as a pulse sensor and a blood oxygen sensor (SpO2 sensor).
+The device continuously collects the user's biometric data, and whenever a sudden drop or abnormal change in these indicators is detected, the system predicts the possibility of fainting or falling.
+
+Once this occurs, the system activates an alert mechanism through several channels:
+
+Alerts the user directly via a sound or vibration on the device.
+
+Sends an SMS message to relatives or other people close to them to inform them of their condition.
+
+Notification via a simple mobile/web app that displays the user's status and previous alerts.
+
+🎯 Project Objectives
+
+Reducing the risks of fainting and falling through early prediction.
+
+Providing a dual alert system (for the user himself and his family or surroundings).
+
+A simplified prototype design that is scalable for future development.
+
+Highlighting the potential of using simple sensors and basic programming techniques to develop smart healthcare solutions.
+
+🔎 Project Scope (Scope)
+
+Includes:
+
+Data collection from biosensors (pulse + oxygen).
+
+Simplified initial data processing (thresholds or rules).
+
+Design of a prototype bracelet/hardware module.
+
+Sending SMS alerts and app notifications.
+
+Design of a simple application interface to display alerts.
+
+Does not include:
+
+Accurate medical analysis or health diagnosis.
+
+Complex artificial intelligence algorithms (possibly referred to as Future Work).
+
+Integration with formal medical systems or health databases.
+
+🛠️ Tools and Technologies
+
+Hardware: Pulse sensor, SpO2, controller (Arduino / ESP32), GSM module for SMS transmission.
+
+Software: Arduino IDE, Python (for simple analysis if needed), API (Flutter/React or even a simple web page).
+
+Note: SMS + app notifications.
+
+✅ Simplicity Feature
+
+The project will not delve into artificial intelligence.
+
+It relies on sensors + simple Threshold prediction rules.
+
+Students will develop it as a research-based project with a small prototype that demonstrates the concept.
