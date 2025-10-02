@@ -1,98 +1,98 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Health Monitor - Fall/Fainting Prediction</title>
+    <title>مراقب الصحة الذكي - نظام توقع الإغماء والسقوط</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🏥 Smart Health Monitor</h1>
-            <p>Early Fainting & Fall Prevention System</p>
+            <h1>🏥 مراقب الصحة الذكي</h1>
+            <p>نظام الوقاية المبكرة من الإغماء والسقوط</p>
         </header>
 
         <div class="device-status">
             <div class="status-indicator" id="deviceStatus">
                 <span class="status-dot"></span>
-                <span id="statusText">Device Connected</span>
+                <span id="statusText">الجهاز متصل</span>
             </div>
         </div>
 
         <div class="biometric-panel">
-            <h2>📊 Live Biometric Data</h2>
+            <h2>📊 البيانات الحيوية المباشرة</h2>
             <div class="sensors-grid">
                 <div class="sensor-card">
-                    <h3>❤️ Heart Rate</h3>
+                    <h3>❤️ معدل ضربات القلب</h3>
                     <div class="sensor-value" id="heartRate">75</div>
-                    <div class="sensor-unit">BPM</div>
-                    <div class="sensor-status normal" id="hrStatus">Normal</div>
+                    <div class="sensor-unit">ض/د</div>
+                    <div class="sensor-status normal" id="hrStatus">طبيعي</div>
                 </div>
                 
                 <div class="sensor-card">
-                    <h3>🫁 Blood Oxygen</h3>
+                    <h3>🫁 أكسجين الدم</h3>
                     <div class="sensor-value" id="bloodOxygen">98</div>
                     <div class="sensor-unit">%</div>
-                    <div class="sensor-status normal" id="o2Status">Normal</div>
+                    <div class="sensor-status normal" id="o2Status">طبيعي</div>
                 </div>
             </div>
         </div>
 
         <div class="alert-panel">
-            <h2>🚨 Alert System</h2>
+            <h2>🚨 نظام التنبيه</h2>
             <div class="alert-controls">
-                <button id="emergencyBtn" class="emergency-btn">Test Emergency Alert</button>
-                <button id="resetBtn" class="reset-btn">Reset System</button>
+                <button id="emergencyBtn" class="emergency-btn">اختبار تنبيه الطوارئ</button>
+                <button id="resetBtn" class="reset-btn">إعادة تعيين النظام</button>
             </div>
             <div class="alert-display" id="alertDisplay">
-                <p>System monitoring... All vitals normal</p>
+                <p>النظام يراقب... جميع العلامات الحيوية طبيعية</p>
             </div>
         </div>
 
         <div class="emergency-contacts">
-            <h2>📞 Emergency Contacts</h2>
+            <h2>📞 جهات اتصال الطوارئ</h2>
             <div class="contact-list">
                 <div class="contact-item">
-                    <span class="contact-name">Dr. Smith</span>
-                    <span class="contact-phone">+1-555-0123</span>
-                    <span class="contact-status" id="contact1">Ready</span>
+                    <span class="contact-name">د. أحمد محمد</span>
+                    <span class="contact-phone">+966-555-0123</span>
+                    <span class="contact-status" id="contact1">جاهز</span>
                 </div>
                 <div class="contact-item">
-                    <span class="contact-name">Family Member</span>
-                    <span class="contact-phone">+1-555-0456</span>
-                    <span class="contact-status" id="contact2">Ready</span>
+                    <span class="contact-name">أحد أفراد العائلة</span>
+                    <span class="contact-phone">+966-555-0456</span>
+                    <span class="contact-status" id="contact2">جاهز</span>
                 </div>
             </div>
         </div>
 
         <div class="history-panel">
-            <h2>📋 Alert History</h2>
+            <h2>📋 سجل التنبيهات</h2>
             <div class="history-list" id="historyList">
-                <p class="no-alerts">No alerts recorded</p>
+                <p class="no-alerts">لا توجد تنبيهات مسجلة</p>
             </div>
         </div>
 
         <div class="device-simulation">
-            <h2>🔧 Device Simulation</h2>
+            <h2>🔧 محاكاة الجهاز</h2>
             <div class="simulation-controls">
-                <button id="simulateNormal">Normal Vitals</button>
-                <button id="simulateLowHR">Low Heart Rate</button>
-                <button id="simulateLowO2">Low Oxygen</button>
-                <button id="simulateCritical">Critical State</button>
+                <button id="simulateNormal">علامات حيوية طبيعية</button>
+                <button id="simulateLowHR">معدل قلب منخفض</button>
+                <button id="simulateLowO2">أكسجين منخفض</button>
+                <button id="simulateCritical">حالة حرجة</button>
             </div>
         </div>
     </div>
 
-    <!-- Emergency Modal -->
+    <!-- نافذة الطوارئ -->
     <div id="emergencyModal" class="modal">
         <div class="modal-content emergency">
-            <h2>🚨 EMERGENCY ALERT</h2>
-            <p id="emergencyMessage">Critical vital signs detected!</p>
+            <h2>🚨 تنبيه طوارئ</h2>
+            <p id="emergencyMessage">تم اكتشاف علامات حيوية حرجة!</p>
             <div class="emergency-actions">
-                <button id="acknowledgeBtn">Acknowledge Alert</button>
-                <button id="callEmergencyBtn">Call Emergency Services</button>
+                <button id="acknowledgeBtn">تأكيد التنبيه</button>
+                <button id="callEmergencyBtn">الاتصال بخدمات الطوارئ</button>
             </div>
         </div>
     </div>
