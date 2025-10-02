@@ -184,11 +184,7 @@ class SmartHealthMonitor {
                 element.className = "contact-status notified";
 
                 // Simulate SMS notification
-                console.log(`🚨 تم إرسال تنبيه SMS إلى ${contact.name} (${contact.phone}): 
-                    "تنبيه صحي: تم اكتشاف علامات حيوية غير طبيعية لأحد أفراد عائلتك. 
-                    معدل القلب: ${Math.round(this.currentHeartRate)} ض/د، 
-                    أكسجين الدم: ${Math.round(this.currentBloodOxygen)}%. 
-                    الموقع: المنزل. الوقت: ${new Date().toLocaleTimeString()}");
+                console.log(`🚨 تم إرسال تنبيه SMS إلى ${contact.name} (${contact.phone}): "تنبيه صحي: تم اكتشاف علامات حيوية غير طبيعية لأحد أفراد عائلتك. معدل القلب: ${Math.round(this.currentHeartRate)} ض/د، أكسجين الدم: ${Math.round(this.currentBloodOxygen)}%. الموقع: المنزل. الوقت: ${new Date().toLocaleTimeString()}"`);
 
                 // Reset status after 10 seconds
                 setTimeout(() => {
