@@ -1,16 +1,102 @@
+
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>replit</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Health Monitor - Fall/Fainting Prediction</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
-
 <body>
-  Hello world
-  <script src="script.js"></script>
-</body>
+    <div class="container">
+        <header>
+            <h1>🏥 Smart Health Monitor</h1>
+            <p>Early Fainting & Fall Prevention System</p>
+        </header>
 
+        <div class="device-status">
+            <div class="status-indicator" id="deviceStatus">
+                <span class="status-dot"></span>
+                <span id="statusText">Device Connected</span>
+            </div>
+        </div>
+
+        <div class="biometric-panel">
+            <h2>📊 Live Biometric Data</h2>
+            <div class="sensors-grid">
+                <div class="sensor-card">
+                    <h3>❤️ Heart Rate</h3>
+                    <div class="sensor-value" id="heartRate">75</div>
+                    <div class="sensor-unit">BPM</div>
+                    <div class="sensor-status normal" id="hrStatus">Normal</div>
+                </div>
+                
+                <div class="sensor-card">
+                    <h3>🫁 Blood Oxygen</h3>
+                    <div class="sensor-value" id="bloodOxygen">98</div>
+                    <div class="sensor-unit">%</div>
+                    <div class="sensor-status normal" id="o2Status">Normal</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-panel">
+            <h2>🚨 Alert System</h2>
+            <div class="alert-controls">
+                <button id="emergencyBtn" class="emergency-btn">Test Emergency Alert</button>
+                <button id="resetBtn" class="reset-btn">Reset System</button>
+            </div>
+            <div class="alert-display" id="alertDisplay">
+                <p>System monitoring... All vitals normal</p>
+            </div>
+        </div>
+
+        <div class="emergency-contacts">
+            <h2>📞 Emergency Contacts</h2>
+            <div class="contact-list">
+                <div class="contact-item">
+                    <span class="contact-name">Dr. Smith</span>
+                    <span class="contact-phone">+1-555-0123</span>
+                    <span class="contact-status" id="contact1">Ready</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-name">Family Member</span>
+                    <span class="contact-phone">+1-555-0456</span>
+                    <span class="contact-status" id="contact2">Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-panel">
+            <h2>📋 Alert History</h2>
+            <div class="history-list" id="historyList">
+                <p class="no-alerts">No alerts recorded</p>
+            </div>
+        </div>
+
+        <div class="device-simulation">
+            <h2>🔧 Device Simulation</h2>
+            <div class="simulation-controls">
+                <button id="simulateNormal">Normal Vitals</button>
+                <button id="simulateLowHR">Low Heart Rate</button>
+                <button id="simulateLowO2">Low Oxygen</button>
+                <button id="simulateCritical">Critical State</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Modal -->
+    <div id="emergencyModal" class="modal">
+        <div class="modal-content emergency">
+            <h2>🚨 EMERGENCY ALERT</h2>
+            <p id="emergencyMessage">Critical vital signs detected!</p>
+            <div class="emergency-actions">
+                <button id="acknowledgeBtn">Acknowledge Alert</button>
+                <button id="callEmergencyBtn">Call Emergency Services</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
 </html>
