@@ -5,8 +5,8 @@ class SmartHealthMonitor {
         this.isMonitoring = true;
         this.alertHistory = [];
         this.emergencyContacts = [
-            { name: "Dr. Smith", phone: "+1-555-0123", element: "contact1" },
-            { name: "Family Member", phone: "+1-555-0456", element: "contact2" }
+            { name: "د. أحمد محمد", phone: "+966-555-0123", element: "contact1" },
+            { name: "أحد أفراد العائلة", phone: "+966-555-0456", element: "contact2" }
         ];
 
         // Thresholds for alert system
@@ -118,15 +118,24 @@ class SmartHealthMonitor {
         document.getElementById('heartRate').textContent = Math.round(this.currentHeartRate);
         const hrStatus = this.getVitalStatus(this.currentHeartRate, 'heartRate');
         const hrStatusElement = document.getElementById('hrStatus');
-        hrStatusElement.textContent = hrStatus.charAt(0).toUpperCase() + hrStatus.slice(1);
+        hrStatusElement.textContent = this.getArabicStatus(hrStatus);
         hrStatusElement.className = `sensor-status ${hrStatus}`;
 
         // Update blood oxygen display
         document.getElementById('bloodOxygen').textContent = Math.round(this.currentBloodOxygen);
         const o2Status = this.getVitalStatus(this.currentBloodOxygen, 'bloodOxygen');
         const o2StatusElement = document.getElementById('o2Status');
-        o2StatusElement.textContent = o2Status.charAt(0).toUpperCase() + o2Status.slice(1);
+        o2StatusElement.textContent = this.getArabicStatus(o2Status);
         o2StatusElement.className = `sensor-status ${o2Status}`;
+    }
+
+    getArabicStatus(status) {
+        const statusMap = {
+            'normal': 'طبيعي',
+            'warning': 'تحذير',
+            'critical': 'حرج'
+        };
+        return statusMap[status] || 'طبيعي';
     }
 
     triggerEmergencyAlert(message) {
@@ -184,7 +193,7 @@ class SmartHealthMonitor {
                 element.className = "contact-status notified";
 
                 // Simulate SMS notification
-                console.log(`🚨 تم إرسال تنبيه SMS إلى ${contact.name} (${contact.phone}): "تنبيه صحي: تم اكتشاف علامات حيوية غير طبيعية لأحد أفراد عائلتك. معدل القلب: ${Math.round(this.currentHeartRate)} ض/د، أكسجين الدم: ${Math.round(this.currentBloodOxygen)}%. الموقع: المنزل. الوقت: ${new Date().toLocaleTimeString()}"`);
+                console.log(`🚨 تم إرسال تنبيه SMS إلى ${contact.name} (${contact.phone}): تنبيه صحي - تم اكتشاف علامات حيوية غير طبيعية. معدل القلب: ${Math.round(this.currentHeartRate)} ض/د، أكسجين الدم: ${Math.round(this.currentBloodOxygen)}%. الموقع: المنزل. الوقت: ${new Date().toLocaleTimeString()}`);
 
                 // Reset status after 10 seconds
                 setTimeout(() => {
@@ -229,7 +238,7 @@ class SmartHealthMonitor {
         const historyList = document.getElementById('historyList');
 
         if (this.alertHistory.length === 0) {
-            historyList.innerHTML = '<p class="no-alerts">No alerts recorded</p>';
+            historyList.innerHTML = '<p class="no-alerts">لا توجد تنبيهات مسجلة</p>';
             return;
         }
 
