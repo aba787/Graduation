@@ -1,0 +1,52 @@
+Guest Recommendations
+
+Explain the points, one by one
+
+1. Research Title
+• Research title.
+• Supervisor's name.
+• Team members' names.
+2. Preface
+• A brief introduction to the project (why you chose it and why it's important).
+3. Acknowledgements
+• A brief thank-you to the supervisor, university, or anyone who helped.
+4. Abstract
+• A summary of the project (project idea, goal, scope, and expected results).
+• Keywords: Keywords such as: Fall Prediction, Sensors, Machine Learning, Healthcare.
+5. Introduction
+• Research Overview Statement: A general definition of the idea.
+• Goals and Objectives: The goals you want to achieve.
+• Scope: The boundaries of the research (what it includes and what it doesn't).
+• Limitations & Constraints: Difficulties or challenges (such as time, resources, or lack of data).
+• Assumptions: Your assumptions (e.g., the user always wears the bracelet).
+6. PREVIOUS WORKS / LITERATURE REVIEW / CASE STUDY / BACKGROUND
+• Previous research in the same field.
+• A simple comparison between them and your project.
+7. FEASIBILITY STUDY
+• Purpose: The goal of the study.
+• Justification: Why your project is important.
+• Economic Feasibility: Are the expected costs reasonable?
+• Technical Feasibility: Is the hardware/software you need available?
+• Desired System Functionality: The functions you want the system to perform.
+8. RESEARCH PLAN
+• Work Breakdown Structure: Dividing the work into phases.
+• Activity and Task List: A schedule of tasks for each member.
+• Gantt Chart: A graph showing the timeline.
+9. SRS – SYSTEM REQUIREMENTS SPECIFICATION
+• System Requirements Analysis: System requirements analysis.
+• Hardware Requirements: Hardware specifications (e.g., ESP32 + Pulse Sensor).
+• Software Requirements: Software specifications (Arduino IDE, Python).
+• Other Requirements: Any additional requirements (e.g., SMS API).
+10. SYSTEM DESIGN
+
+• Existing Methods: Current methods for solving the problem.
+• Proposed Research Methodology: Your method (simple rules or thresholds).
+• Proposed Framework: A diagram showing how the system works from sensing → processing → alerting.
+
+11. CONCLUSION (Expected Result)
+
+• What do you expect to come out of the project? (A prototype system that predicts crashes and sends alerts).
+
+12. REFERENCES
+
+• References (previous research + any scientific source or book)
