@@ -23,6 +23,7 @@ class SmartHealthMonitor {
         this.maxHistoryLength = 20;
         this.consecutiveAbnormalReadings = 0;
         this.lastNormalTime = Date.now();
+        this.lastEmergencyAlert = 0;
 
         this.init();
     }
@@ -309,6 +310,13 @@ class SmartHealthMonitor {
     }
 
     triggerEmergencyAlert(message) {
+        // Prevent spam alerts - only send if last alert was more than 10 seconds ago
+        const now = Date.now();
+        if (this.lastEmergencyAlert && (now - this.lastEmergencyAlert) < 10000) {
+            return;
+        }
+        this.lastEmergencyAlert = now;
+
         const alert = {
             type: 'critical',
             message: message,

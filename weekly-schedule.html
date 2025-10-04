@@ -1,0 +1,566 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جدول العلامات الحيوية الأسبوعي - مراقب الصحة الذكي</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <style>
+        .schedule-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .week-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .nav-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .week-title {
+            font-size: 1.3rem;
+            color: #333;
+            text-align: center;
+        }
+        .day-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-right: 5px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        .day-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .day-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        .day-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .vital-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .vital-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .vital-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        .vital-unit {
+            font-size: 0.8rem;
+            color: #888;
+        }
+        .vital-normal { color: #4CAF50; }
+        .vital-warning { color: #FFC107; }
+        .vital-critical { color: #F44336; }
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .time-slot {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.8rem;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        .alert-summary {
+            background: linear-gradient(135deg, #fff8e1, #ffecb3);
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        .weekly-summary {
+            background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .stat-item {
+            text-align: center;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .back-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .export-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📅 الجدول الأسبوعي للعلامات الحيوية</h1>
+            <p>مراقبة شاملة ومستمرة للصحة</p>
+        </header>
+
+        <div style="display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;">
+            <button class="back-btn" onclick="window.location.href='index.html'">🔙 العودة للنظام الرئيسي</button>
+            <button class="back-btn" onclick="window.location.href='research-documentation.html'">📋 التوثيق البحثي</button>
+            <button class="export-btn" onclick="exportWeeklyData()">📊 تصدير البيانات</button>
+        </div>
+
+        <div class="week-navigation">
+            <button class="nav-btn" onclick="changeWeek(-1)">⬅️ الأسبوع السابق</button>
+            <div class="week-title" id="weekTitle">الأسبوع الحالي: 1-7 أكتوبر 2024</div>
+            <button class="nav-btn" onclick="changeWeek(1)">الأسبوع التالي ➡️</button>
+        </div>
+
+        <div class="weekly-summary">
+            <h2>📊 ملخص الأسبوع</h2>
+            <div class="summary-stats">
+                <div class="stat-item">
+                    <div style="font-size: 1.5rem; font-weight: bold; color: #4CAF50;">142</div>
+                    <div>إجمالي القراءات</div>
+                </div>
+                <div class="stat-item">
+                    <div style="font-size: 1.5rem; font-weight: bold; color: #FFC107;">8</div>
+                    <div>تنبيهات تحذيرية</div>
+                </div>
+                <div class="stat-item">
+                    <div style="font-size: 1.5rem; font-weight: bold; color: #F44336;">2</div>
+                    <div>تنبيهات حرجة</div>
+                </div>
+                <div class="stat-item">
+                    <div style="font-size: 1.5rem; font-weight: bold; color: #2196F3;">98.5%</div>
+                    <div>وقت التشغيل</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="schedule-container" id="weeklySchedule">
+            <!-- الأحد -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">🌅 الأحد</div>
+                    <div class="day-date">1 أكتوبر 2024</div>
+                </div>
+                <div class="vitals-grid">
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط معدل القلب</div>
+                        <div class="vital-value vital-normal">74</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط الأكسجين</div>
+                        <div class="vital-value vital-normal">97</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أعلى معدل</div>
+                        <div class="vital-value vital-warning">89</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أقل أكسجين</div>
+                        <div class="vital-value vital-warning">94</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                </div>
+                <div class="time-slots">
+                    <div class="time-slot">6:00 ص<br>72 ض/د<br>98%</div>
+                    <div class="time-slot">9:00 ص<br>76 ض/د<br>97%</div>
+                    <div class="time-slot">12:00 ظ<br>78 ض/د<br>96%</div>
+                    <div class="time-slot">3:00 ع<br>89 ض/د<br>94%</div>
+                    <div class="time-slot">6:00 م<br>82 ض/د<br>97%</div>
+                    <div class="time-slot">9:00 م<br>71 ض/د<br>98%</div>
+                </div>
+                <div class="alert-summary">
+                    📝 ملاحظات: ارتفاع طفيف في معدل القلب بعد الظهر، تم إرسال تنبيه تحذيري
+                </div>
+            </div>
+
+            <!-- الإثنين -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">🌅 الإثنين</div>
+                    <div class="day-date">2 أكتوبر 2024</div>
+                </div>
+                <div class="vitals-grid">
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط معدل القلب</div>
+                        <div class="vital-value vital-normal">73</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط الأكسجين</div>
+                        <div class="vital-value vital-normal">98</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أعلى معدل</div>
+                        <div class="vital-value vital-normal">85</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أقل أكسجين</div>
+                        <div class="vital-value vital-normal">96</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                </div>
+                <div class="time-slots">
+                    <div class="time-slot">6:00 ص<br>70 ض/د<br>98%</div>
+                    <div class="time-slot">9:00 ص<br>74 ض/د<br>98%</div>
+                    <div class="time-slot">12:00 ظ<br>76 ض/د<br>97%</div>
+                    <div class="time-slot">3:00 ع<br>75 ض/د<br>96%</div>
+                    <div class="time-slot">6:00 م<br>85 ض/د<br>98%</div>
+                    <div class="time-slot">9:00 م<br>68 ض/د<br>99%</div>
+                </div>
+                <div class="alert-summary">
+                    ✅ يوم مستقر: جميع القراءات ضمن المعدل الطبيعي
+                </div>
+            </div>
+
+            <!-- الثلاثاء -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">🌅 الثلاثاء</div>
+                    <div class="day-date">3 أكتوبر 2024</div>
+                </div>
+                <div class="vitals-grid">
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط معدل القلب</div>
+                        <div class="vital-value vital-warning">67</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط الأكسجين</div>
+                        <div class="vital-value vital-warning">95</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أعلى معدل</div>
+                        <div class="vital-value vital-normal">79</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أقل أكسجين</div>
+                        <div class="vital-value vital-critical">92</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                </div>
+                <div class="time-slots">
+                    <div class="time-slot">6:00 ص<br>65 ض/د<br>96%</div>
+                    <div class="time-slot">9:00 ص<br>68 ض/د<br>95%</div>
+                    <div class="time-slot">12:00 ظ<br>70 ض/د<br>94%</div>
+                    <div class="time-slot">3:00 ع<br>66 ض/د<br>92%</div>
+                    <div class="time-slot">6:00 م<br>79 ض/د<br>96%</div>
+                    <div class="time-slot">9:00 م<br>64 ض/د<br>97%</div>
+                </div>
+                <div class="alert-summary">
+                    ⚠️ انتباه: انخفاض في معدل القلب ومستوى الأكسجين، تم إرسال 3 تنبيهات تحذيرية
+                </div>
+            </div>
+
+            <!-- الأربعاء -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">🌅 الأربعاء</div>
+                    <div class="day-date">4 أكتوبر 2024</div>
+                </div>
+                <div class="vitals-grid">
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط معدل القلب</div>
+                        <div class="vital-value vital-critical">52</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط الأكسجين</div>
+                        <div class="vital-value vital-critical">91</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أعلى معدل</div>
+                        <div class="vital-value vital-warning">73</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أقل أكسجين</div>
+                        <div class="vital-value vital-critical">88</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                </div>
+                <div class="time-slots">
+                    <div class="time-slot">6:00 ص<br>49 ض/د<br>90%</div>
+                    <div class="time-slot">9:00 ص<br>53 ض/د<br>91%</div>
+                    <div class="time-slot">12:00 ظ<br>55 ض/د<br>92%</div>
+                    <div class="time-slot">3:00 ع<br>47 ض/د<br>88%</div>
+                    <div class="time-slot">6:00 م<br>73 ض/د<br>94%</div>
+                    <div class="time-slot">9:00 م<br>52 ض/د<br>90%</div>
+                </div>
+                <div class="alert-summary">
+                    🚨 يوم حرج: تم إرسال تنبيه طوارئ في الساعة 3:00 ع، تحسن طفيف بعد التدخل الطبي
+                </div>
+            </div>
+
+            <!-- الخميس -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">🌅 الخميس</div>
+                    <div class="day-date">5 أكتوبر 2024</div>
+                </div>
+                <div class="vitals-grid">
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط معدل القلب</div>
+                        <div class="vital-value vital-warning">69</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط الأكسجين</div>
+                        <div class="vital-value vital-warning">94</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أعلى معدل</div>
+                        <div class="vital-value vital-normal">82</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أقل أكسجين</div>
+                        <div class="vital-value vital-warning">93</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                </div>
+                <div class="time-slots">
+                    <div class="time-slot">6:00 ص<br>67 ض/د<br>95%</div>
+                    <div class="time-slot">9:00 ص<br>71 ض/د<br>94%</div>
+                    <div class="time-slot">12:00 ظ<br>72 ض/د<br>93%</div>
+                    <div class="time-slot">3:00 ع<br>68 ض/د<br>94%</div>
+                    <div class="time-slot">6:00 م<br>82 ض/د<br>95%</div>
+                    <div class="time-slot">9:00 م<br>66 ض/د<br>94%</div>
+                </div>
+                <div class="alert-summary">
+                    📈 تحسن تدريجي: استقرار نسبي مع تحسن طفيف، تم إرسال تنبيه تحذيري واحد
+                </div>
+            </div>
+
+            <!-- الجمعة -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">🌅 الجمعة</div>
+                    <div class="day-date">6 أكتوبر 2024</div>
+                </div>
+                <div class="vitals-grid">
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط معدل القلب</div>
+                        <div class="vital-value vital-normal">76</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط الأكسجين</div>
+                        <div class="vital-value vital-normal">97</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أعلى معدل</div>
+                        <div class="vital-value vital-normal">88</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أقل أكسجين</div>
+                        <div class="vital-value vital-normal">95</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                </div>
+                <div class="time-slots">
+                    <div class="time-slot">6:00 ص<br>74 ض/د<br>97%</div>
+                    <div class="time-slot">9:00 ص<br>77 ض/د<br>98%</div>
+                    <div class="time-slot">12:00 ظ<br>79 ض/د<br>96%</div>
+                    <div class="time-slot">3:00 ع<br>76 ض/د<br>95%</div>
+                    <div class="time-slot">6:00 م<br>88 ض/د<br>97%</div>
+                    <div class="time-slot">9:00 م<br>70 ض/د<br>98%</div>
+                </div>
+                <div class="alert-summary">
+                    ✅ عودة للاستقرار: جميع القراءات عادت للمعدل الطبيعي
+                </div>
+            </div>
+
+            <!-- السبت -->
+            <div class="day-card">
+                <div class="day-header">
+                    <div class="day-name">🌅 السبت</div>
+                    <div class="day-date">7 أكتوبر 2024</div>
+                </div>
+                <div class="vitals-grid">
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط معدل القلب</div>
+                        <div class="vital-value vital-normal">75</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">متوسط الأكسجين</div>
+                        <div class="vital-value vital-normal">98</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أعلى معدل</div>
+                        <div class="vital-value vital-normal">86</div>
+                        <div class="vital-unit">ض/د</div>
+                    </div>
+                    <div class="vital-item">
+                        <div class="vital-label">أقل أكسجين</div>
+                        <div class="vital-value vital-normal">96</div>
+                        <div class="vital-unit">%</div>
+                    </div>
+                </div>
+                <div class="time-slots">
+                    <div class="time-slot">6:00 ص<br>72 ض/د<br>98%</div>
+                    <div class="time-slot">9:00 ص<br>75 ض/د<br>99%</div>
+                    <div class="time-slot">12:00 ظ<br>78 ض/د<br>97%</div>
+                    <div class="time-slot">3:00 ع<br>77 ض/د<br>96%</div>
+                    <div class="time-slot">6:00 م<br>86 ض/د<br>98%</div>
+                    <div class="time-slot">9:00 م<br>71 ض/د<br>99%</div>
+                </div>
+                <div class="alert-summary">
+                    💚 أسبوع مستقر: إنهاء الأسبوع بقراءات ممتازة وثبات في العلامات الحيوية
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentWeekOffset = 0;
+
+        function changeWeek(direction) {
+            currentWeekOffset += direction;
+            updateWeekTitle();
+            generateWeekData();
+        }
+
+        function updateWeekTitle() {
+            const today = new Date();
+            const weekStart = new Date(today.getTime() + (currentWeekOffset * 7 * 24 * 60 * 60 * 1000));
+            const weekEnd = new Date(weekStart.getTime() + (6 * 24 * 60 * 60 * 1000));
+            
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            const startStr = weekStart.toLocaleDateString('ar-SA', options);
+            const endStr = weekEnd.toLocaleDateString('ar-SA', options);
+            
+            document.getElementById('weekTitle').textContent = `الأسبوع: ${startStr} - ${endStr}`;
+        }
+
+        function generateWeekData() {
+            // هنا يمكن إضافة منطق لتوليد بيانات مختلفة لكل أسبوع
+            console.log(`تحديث بيانات الأسبوع: ${currentWeekOffset}`);
+        }
+
+        function exportWeeklyData() {
+            const weeklyData = {
+                week: document.getElementById('weekTitle').textContent,
+                exportDate: new Date().toLocaleString('ar-SA'),
+                summary: {
+                    totalReadings: 142,
+                    warningAlerts: 8,
+                    criticalAlerts: 2,
+                    uptime: "98.5%"
+                },
+                dailyData: [
+                    {
+                        day: "الأحد",
+                        date: "1 أكتوبر 2024",
+                        avgHeartRate: 74,
+                        avgOxygen: 97,
+                        maxHeartRate: 89,
+                        minOxygen: 94,
+                        alerts: 1,
+                        readings: [
+                            {time: "6:00", hr: 72, o2: 98},
+                            {time: "9:00", hr: 76, o2: 97},
+                            {time: "12:00", hr: 78, o2: 96},
+                            {time: "15:00", hr: 89, o2: 94},
+                            {time: "18:00", hr: 82, o2: 97},
+                            {time: "21:00", hr: 71, o2: 98}
+                        ]
+                    }
+                    // يمكن إضافة باقي أيام الأسبوع
+                ]
+            };
+
+            const dataStr = JSON.stringify(weeklyData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `weekly_health_report_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            
+            alert('✅ تم تصدير التقرير الأسبوعي بنجاح');
+        }
+
+        // تهيئة العرض
+        updateWeekTitle();
+    </script>
+</body>
+</html>
