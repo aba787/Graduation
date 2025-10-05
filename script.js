@@ -272,6 +272,12 @@ class SmartHealthMonitor {
     }
 
     getArabicStatus(status) {
+        // Use language translator if available
+        if (window.languageTranslator) {
+            return window.languageTranslator.getTranslatedStatus(status);
+        }
+        
+        // Fallback to Arabic
         const statusMap = {
             'normal': 'طبيعي',
             'warning': 'تحذير',
@@ -605,6 +611,7 @@ class SmartHealthMonitor {
 // Initialize the Smart Health Monitor when page loads
 document.addEventListener('DOMContentLoaded', () => {
     const monitor = new SmartHealthMonitor();
+    languageTranslator = new LanguageTranslator();
 
     // Add keyboard shortcut info
     console.log("🏥 نظام مراقب الصحة الذكي مُفعّل");
@@ -614,10 +621,170 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("⌨️ اختصارات لوحة المفاتيح:");
     console.log("   - Escape: إغلاق التنبيهات");
     console.log("   - Ctrl+R: إعادة تعيين النظام");
+    console.log("🌐 Language Toggle: Click language button to switch");
 
     // Add export functionality to a button (if needed)
     window.healthMonitor = monitor;
+    window.languageTranslator = languageTranslator;
 });
+
+// Language Translation System
+class LanguageTranslator {
+    constructor() {
+        this.currentLanguage = 'ar';
+        this.translations = {
+            // Status messages
+            statusMessages: {
+                ar: {
+                    'normal': 'طبيعي',
+                    'warning': 'تحذير',
+                    'critical': 'حرج',
+                    'emergency': 'طوارئ',
+                    'deviceConnected': 'الجهاز متصل - كل شيء طبيعي',
+                    'activeAlert': 'تنبيه نشط - مراقبة مكثفة',
+                    'monitoring': 'مراقبة - قراءات غير طبيعية',
+                    'ready': 'جاهز',
+                    'sent': 'تم الإرسال'
+                },
+                en: {
+                    'normal': 'Normal',
+                    'warning': 'Warning',
+                    'critical': 'Critical',
+                    'emergency': 'Emergency',
+                    'deviceConnected': 'Device Connected - All Normal',
+                    'activeAlert': 'Active Alert - Intensive Monitoring',
+                    'monitoring': 'Monitoring - Abnormal Readings',
+                    'ready': 'Ready',
+                    'sent': 'Sent'
+                }
+            },
+            
+            // Alert messages
+            alertMessages: {
+                ar: {
+                    'systemReady': '🏥 نظام مراقب الصحة الذكي جاهز للعمل - يتم مراقبة العلامات الحيوية',
+                    'systemReset': '🔄 تم إعادة تعيين النظام - جميع العلامات الحيوية طبيعية',
+                    'vitalsNormal': '✅ العلامات الحيوية عادت للمعدل الطبيعي',
+                    'alertAcknowledged': '✅ تم تأكيد استلام التنبيه من المستخدم',
+                    'emergencyCalled': '📞 تم الاتصال بخدمات الطوارئ - المساعدة في الطريق'
+                },
+                en: {
+                    'systemReady': '🏥 Smart Health Monitor System Ready - Monitoring Vital Signs',
+                    'systemReset': '🔄 System Reset - All Vital Signs Normal',
+                    'vitalsNormal': '✅ Vital Signs Returned to Normal Range',
+                    'alertAcknowledged': '✅ Alert Acknowledged by User',
+                    'emergencyCalled': '📞 Emergency Services Called - Help is on the Way'
+                }
+            }
+        };
+        
+        this.init();
+    }
+
+    init() {
+        // Add language toggle button event listener
+        document.getElementById('languageToggle').addEventListener('click', () => {
+            this.toggleLanguage();
+        });
+        
+        // Set initial language based on HTML lang attribute
+        this.currentLanguage = document.documentElement.lang === 'en' ? 'en' : 'ar';
+    }
+
+    toggleLanguage() {
+        this.currentLanguage = this.currentLanguage === 'ar' ? 'en' : 'ar';
+        
+        // Update HTML attributes
+        document.documentElement.lang = this.currentLanguage;
+        document.documentElement.dir = this.currentLanguage === 'ar' ? 'rtl' : 'ltr';
+        
+        // Update button text
+        document.getElementById('languageToggle').textContent = this.currentLanguage === 'ar' ? 'EN' : 'عربي';
+        
+        // Update all translatable elements
+        this.updateAllTranslations();
+        
+        console.log(`🌐 Language switched to: ${this.currentLanguage === 'ar' ? 'Arabic' : 'English'}`);
+    }
+
+    updateAllTranslations() {
+        // Find all elements with translation attributes
+        const translatableElements = document.querySelectorAll('[data-ar]');
+        
+        translatableElements.forEach(element => {
+            const arabicText = element.getAttribute('data-ar');
+            const englishText = element.getAttribute('data-en');
+            
+            if (this.currentLanguage === 'ar') {
+                element.textContent = arabicText;
+            } else {
+                element.textContent = englishText;
+            }
+        });
+
+        // Update dynamic status texts
+        this.updateStatusTexts();
+    }
+
+    updateStatusTexts() {
+        // Update sensor status elements
+        const hrStatus = document.getElementById('hrStatus');
+        const o2Status = document.getElementById('o2Status');
+        
+        if (hrStatus && o2Status) {
+            // Get current status from class names
+            const hrCurrentStatus = this.getStatusFromElement(hrStatus);
+            const o2CurrentStatus = this.getStatusFromElement(o2Status);
+            
+            hrStatus.textContent = this.getTranslatedStatus(hrCurrentStatus);
+            o2Status.textContent = this.getTranslatedStatus(o2CurrentStatus);
+        }
+
+        // Update contact status
+        this.updateContactStatus();
+    }
+
+    getStatusFromElement(element) {
+        const classList = Array.from(element.classList);
+        const statusClasses = ['normal', 'warning', 'critical', 'emergency'];
+        return statusClasses.find(status => classList.includes(status)) || 'normal';
+    }
+
+    getTranslatedStatus(status) {
+        return this.translations.statusMessages[this.currentLanguage][status] || status;
+    }
+
+    updateContactStatus() {
+        const contact1 = document.getElementById('contact1');
+        const contact2 = document.getElementById('contact2');
+        
+        [contact1, contact2].forEach(contact => {
+            if (contact) {
+                const currentText = contact.textContent.trim();
+                if (currentText === 'جاهز' || currentText === 'Ready') {
+                    contact.textContent = this.translations.statusMessages[this.currentLanguage]['ready'];
+                } else if (currentText === 'تم الإرسال' || currentText === 'Sent') {
+                    contact.textContent = this.translations.statusMessages[this.currentLanguage]['sent'];
+                }
+            }
+        });
+    }
+
+    translateMessage(messageKey) {
+        return this.translations.alertMessages[this.currentLanguage][messageKey] || messageKey;
+    }
+
+    // Method to be called by the main health monitor system
+    updateDynamicContent(element, content, type = 'general') {
+        // This method can be extended to handle dynamic content translation
+        if (element && content) {
+            element.textContent = content;
+        }
+    }
+}
+
+// Initialize language translator
+let languageTranslator;
 
 // Service Worker registration for PWA functionality
 if ('serviceWorker' in navigator) {

@@ -10,86 +10,91 @@
 <body>
     <div class="container">
         <header>
-            <h1>🏥 مراقب الصحة الذكي</h1>
-            <p>نظام الوقاية المبكرة من الإغماء والسقوط</p>
+            <div class="header-content">
+                <div class="header-text">
+                    <h1 data-ar="🏥 مراقب الصحة الذكي" data-en="🏥 Smart Health Monitor">🏥 مراقب الصحة الذكي</h1>
+                    <p data-ar="نظام الوقاية المبكرة من الإغماء والسقوط" data-en="Early Prevention System for Fainting and Falls">نظام الوقاية المبكرة من الإغماء والسقوط</p>
+                </div>
+                <button id="languageToggle" class="language-btn">EN</button>
+            </div>
         </header>
 
         <div class="device-status">
             <div class="status-indicator" id="deviceStatus">
                 <span class="status-dot"></span>
-                <span id="statusText">الجهاز متصل</span>
+                <span id="statusText" data-ar="الجهاز متصل" data-en="Device Connected">الجهاز متصل</span>
             </div>
         </div>
 
         <div class="biometric-panel">
-            <h2>📊 البيانات الحيوية المباشرة</h2>
+            <h2 data-ar="📊 البيانات الحيوية المباشرة" data-en="📊 Live Biometric Data">📊 البيانات الحيوية المباشرة</h2>
             <div class="sensors-grid">
                 <div class="sensor-card">
-                    <h3>❤️ معدل ضربات القلب</h3>
+                    <h3 data-ar="❤️ معدل ضربات القلب" data-en="❤️ Heart Rate">❤️ معدل ضربات القلب</h3>
                     <div class="sensor-value" id="heartRate">75</div>
-                    <div class="sensor-unit">ض/د</div>
-                    <div class="sensor-status normal" id="hrStatus">طبيعي</div>
+                    <div class="sensor-unit" data-ar="ض/د" data-en="BPM">ض/د</div>
+                    <div class="sensor-status normal" id="hrStatus" data-ar="طبيعي" data-en="Normal">طبيعي</div>
                 </div>
                 
                 <div class="sensor-card">
-                    <h3>🫁 أكسجين الدم</h3>
+                    <h3 data-ar="🫁 أكسجين الدم" data-en="🫁 Blood Oxygen">🫁 أكسجين الدم</h3>
                     <div class="sensor-value" id="bloodOxygen">98</div>
                     <div class="sensor-unit">%</div>
-                    <div class="sensor-status normal" id="o2Status">طبيعي</div>
+                    <div class="sensor-status normal" id="o2Status" data-ar="طبيعي" data-en="Normal">طبيعي</div>
                 </div>
             </div>
         </div>
 
         <div class="alert-panel">
-            <h2>🚨 نظام التنبيه</h2>
+            <h2 data-ar="🚨 نظام التنبيه" data-en="🚨 Alert System">🚨 نظام التنبيه</h2>
             <div class="alert-controls">
-                <button id="emergencyBtn" class="emergency-btn">اختبار تنبيه الطوارئ</button>
-                <button id="resetBtn" class="reset-btn">إعادة تعيين النظام</button>
+                <button id="emergencyBtn" class="emergency-btn" data-ar="اختبار تنبيه الطوارئ" data-en="Test Emergency Alert">اختبار تنبيه الطوارئ</button>
+                <button id="resetBtn" class="reset-btn" data-ar="إعادة تعيين النظام" data-en="Reset System">إعادة تعيين النظام</button>
             </div>
             <div class="alert-display" id="alertDisplay">
-                <p>النظام يراقب... جميع العلامات الحيوية طبيعية</p>
+                <p data-ar="النظام يراقب... جميع العلامات الحيوية طبيعية" data-en="System monitoring... All vital signs normal">النظام يراقب... جميع العلامات الحيوية طبيعية</p>
             </div>
         </div>
 
         <div class="emergency-contacts">
-            <h2>📞 جهات اتصال الطوارئ</h2>
+            <h2 data-ar="📞 جهات اتصال الطوارئ" data-en="📞 Emergency Contacts">📞 جهات اتصال الطوارئ</h2>
             <div class="contact-list">
                 <div class="contact-item">
-                    <span class="contact-name">د. أحمد محمد</span>
+                    <span class="contact-name" data-ar="د. أحمد محمد" data-en="Dr. Ahmed Mohamed">د. أحمد محمد</span>
                     <span class="contact-phone">+966-555-0123</span>
-                    <span class="contact-status" id="contact1">جاهز</span>
+                    <span class="contact-status" id="contact1" data-ar="جاهز" data-en="Ready">جاهز</span>
                 </div>
                 <div class="contact-item">
-                    <span class="contact-name">أحد أفراد العائلة</span>
+                    <span class="contact-name" data-ar="أحد أفراد العائلة" data-en="Family Member">أحد أفراد العائلة</span>
                     <span class="contact-phone">+966-555-0456</span>
-                    <span class="contact-status" id="contact2">جاهز</span>
+                    <span class="contact-status" id="contact2" data-ar="جاهز" data-en="Ready">جاهز</span>
                 </div>
             </div>
         </div>
 
         <div class="history-panel">
-            <h2>📋 سجل التنبيهات</h2>
+            <h2 data-ar="📋 سجل التنبيهات" data-en="📋 Alert History">📋 سجل التنبيهات</h2>
             <div class="history-list" id="historyList">
-                <p class="no-alerts">لا توجد تنبيهات مسجلة</p>
+                <p class="no-alerts" data-ar="لا توجد تنبيهات مسجلة" data-en="No alerts recorded">لا توجد تنبيهات مسجلة</p>
             </div>
         </div>
 
         <div class="device-simulation">
-            <h2>🔧 محاكاة الجهاز</h2>
+            <h2 data-ar="🔧 محاكاة الجهاز" data-en="🔧 Device Simulation">🔧 محاكاة الجهاز</h2>
             <div class="simulation-controls">
-                <button id="simulateNormal">علامات حيوية طبيعية</button>
-                <button id="simulateLowHR">معدل قلب منخفض</button>
-                <button id="simulateLowO2">أكسجين منخفض</button>
-                <button id="simulateCritical">حالة حرجة</button>
+                <button id="simulateNormal" data-ar="علامات حيوية طبيعية" data-en="Normal Vitals">علامات حيوية طبيعية</button>
+                <button id="simulateLowHR" data-ar="معدل قلب منخفض" data-en="Low Heart Rate">معدل قلب منخفض</button>
+                <button id="simulateLowO2" data-ar="أكسجين منخفض" data-en="Low Oxygen">أكسجين منخفض</button>
+                <button id="simulateCritical" data-ar="حالة حرجة" data-en="Critical Condition">حالة حرجة</button>
             </div>
         </div>
 
         <div class="device-simulation">
-            <h2>📚 الموارد والتوثيق</h2>
+            <h2 data-ar="📚 الموارد والتوثيق" data-en="📚 Resources & Documentation">📚 الموارد والتوثيق</h2>
             <div class="simulation-controls">
-                <button onclick="window.location.href='research-documentation.html'" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2);">📋 التوثيق البحثي</button>
-                <button onclick="window.location.href='weekly-schedule.html'" style="background: linear-gradient(135deg, #FF5722, #E64A19);">📅 الجدول الأسبوعي</button>
-                <button onclick="window.healthMonitor.exportHealthData()" style="background: linear-gradient(135deg, #4CAF50, #388E3C);">📊 تصدير البيانات</button>
+                <button onclick="window.location.href='research-documentation.html'" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2);" data-ar="📋 التوثيق البحثي" data-en="📋 Research Documentation">📋 التوثيق البحثي</button>
+                <button onclick="window.location.href='weekly-schedule.html'" style="background: linear-gradient(135deg, #FF5722, #E64A19);" data-ar="📅 الجدول الأسبوعي" data-en="📅 Weekly Schedule">📅 الجدول الأسبوعي</button>
+                <button onclick="window.healthMonitor.exportHealthData()" style="background: linear-gradient(135deg, #4CAF50, #388E3C);" data-ar="📊 تصدير البيانات" data-en="📊 Export Data">📊 تصدير البيانات</button>
             </div>
         </div>
     </div>
@@ -97,11 +102,11 @@
     <!-- نافذة الطوارئ -->
     <div id="emergencyModal" class="modal">
         <div class="modal-content emergency">
-            <h2>🚨 تنبيه طوارئ</h2>
-            <p id="emergencyMessage">تم اكتشاف علامات حيوية حرجة!</p>
+            <h2 data-ar="🚨 تنبيه طوارئ" data-en="🚨 Emergency Alert">🚨 تنبيه طوارئ</h2>
+            <p id="emergencyMessage" data-ar="تم اكتشاف علامات حيوية حرجة!" data-en="Critical vital signs detected!">تم اكتشاف علامات حيوية حرجة!</p>
             <div class="emergency-actions">
-                <button id="acknowledgeBtn">تأكيد التنبيه</button>
-                <button id="callEmergencyBtn">الاتصال بخدمات الطوارئ</button>
+                <button id="acknowledgeBtn" data-ar="تأكيد التنبيه" data-en="Acknowledge Alert">تأكيد التنبيه</button>
+                <button id="callEmergencyBtn" data-ar="الاتصال بخدمات الطوارئ" data-en="Call Emergency Services">الاتصال بخدمات الطوارئ</button>
             </div>
         </div>
     </div>
