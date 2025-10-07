@@ -259,14 +259,17 @@ class SmartHealthMonitor {
 
         const timeSinceNormal = Date.now() - this.lastNormalTime;
         
+        // Get current language from translator if available
+        const currentLang = window.languageTranslator ? window.languageTranslator.currentLanguage : 'ar';
+        
         if (this.consecutiveAbnormalReadings >= 3) {
-            statusText.textContent = "تنبيه نشط - مراقبة مكثفة";
+            statusText.textContent = currentLang === 'ar' ? "تنبيه نشط - مراقبة مكثفة" : "Active Alert - Intensive Monitoring";
             statusDot.style.background = '#FFC107';
         } else if (this.consecutiveAbnormalReadings > 0) {
-            statusText.textContent = "مراقبة - قراءات غير طبيعية";
+            statusText.textContent = currentLang === 'ar' ? "مراقبة - قراءات غير طبيعية" : "Monitoring - Abnormal Readings";
             statusDot.style.background = '#FF9800';
         } else {
-            statusText.textContent = "الجهاز متصل - كل شيء طبيعي";
+            statusText.textContent = currentLang === 'ar' ? "الجهاز متصل - كل شيء طبيعي" : "Device Connected - All Normal";
             statusDot.style.background = '#4CAF50';
         }
     }
@@ -499,8 +502,10 @@ class SmartHealthMonitor {
 
     updateAlertDisplay(message, type) {
         const alertDisplay = document.getElementById('alertDisplay');
-        const time = new Date().toLocaleTimeString('ar-SA');
-        alertDisplay.innerHTML = `<p>${message}</p><small>الوقت: ${time}</small>`;
+        const currentLang = window.languageTranslator ? window.languageTranslator.currentLanguage : 'ar';
+        const time = new Date().toLocaleTimeString(currentLang === 'ar' ? 'ar-SA' : 'en-US');
+        const timeLabel = currentLang === 'ar' ? 'الوقت: ' : 'Time: ';
+        alertDisplay.innerHTML = `<p>${message}</p><small>${timeLabel}${time}</small>`;
         alertDisplay.className = `alert-display ${type}`;
     }
 
@@ -666,14 +671,18 @@ class LanguageTranslator {
                     'systemReset': '🔄 تم إعادة تعيين النظام - جميع العلامات الحيوية طبيعية',
                     'vitalsNormal': '✅ العلامات الحيوية عادت للمعدل الطبيعي',
                     'alertAcknowledged': '✅ تم تأكيد استلام التنبيه من المستخدم',
-                    'emergencyCalled': '📞 تم الاتصال بخدمات الطوارئ - المساعدة في الطريق'
+                    'emergencyCalled': '📞 تم الاتصال بخدمات الطوارئ - المساعدة في الطريق',
+                    'systemMonitoring': 'النظام يراقب... جميع العلامات الحيوية طبيعية',
+                    'noAlerts': 'لا توجد تنبيهات مسجلة'
                 },
                 en: {
                     'systemReady': '🏥 Smart Health Monitor System Ready - Monitoring Vital Signs',
                     'systemReset': '🔄 System Reset - All Vital Signs Normal',
                     'vitalsNormal': '✅ Vital Signs Returned to Normal Range',
                     'alertAcknowledged': '✅ Alert Acknowledged by User',
-                    'emergencyCalled': '📞 Emergency Services Called - Help is on the Way'
+                    'emergencyCalled': '📞 Emergency Services Called - Help is on the Way',
+                    'systemMonitoring': 'System monitoring... All vital signs normal',
+                    'noAlerts': 'No alerts recorded'
                 }
             }
         };
@@ -715,15 +724,28 @@ class LanguageTranslator {
             const arabicText = element.getAttribute('data-ar');
             const englishText = element.getAttribute('data-en');
             
-            if (this.currentLanguage === 'ar') {
+            if (this.currentLanguage === 'ar' && arabicText) {
                 element.textContent = arabicText;
-            } else {
+            } else if (this.currentLanguage === 'en' && englishText) {
                 element.textContent = englishText;
             }
         });
 
         // Update dynamic status texts
         this.updateStatusTexts();
+        
+        // Update alert messages that might not have data attributes
+        this.updateAlertMessages();
+        
+        // Update no-alerts message
+        const noAlertsElement = document.querySelector('.no-alerts');
+        if (noAlertsElement) {
+            noAlertsElement.textContent = this.currentLanguage === 'ar' ? 
+                'لا توجد تنبيهات مسجلة' : 'No alerts recorded';
+        }
+        
+        // Update modal content
+        this.updateModalContent();
     }
 
     updateStatusTexts() {
@@ -768,6 +790,45 @@ class LanguageTranslator {
                 }
             }
         });
+    }
+
+    updateAlertMessages() {
+        // Update any current alert display
+        const alertDisplay = document.getElementById('alertDisplay');
+        if (alertDisplay) {
+            const currentContent = alertDisplay.querySelector('p');
+            if (currentContent) {
+                // Check if it contains common system messages and translate them
+                const text = currentContent.textContent;
+                if (text.includes('النظام يراقب') || text.includes('System monitoring')) {
+                    const time = new Date().toLocaleTimeString(this.currentLanguage === 'ar' ? 'ar-SA' : 'en-US');
+                    const message = this.currentLanguage === 'ar' ? 
+                        'النظام يراقب... جميع العلامات الحيوية طبيعية' :
+                        'System monitoring... All vital signs normal';
+                    alertDisplay.innerHTML = `<p>${message}</p><small>${this.currentLanguage === 'ar' ? 'الوقت: ' : 'Time: '}${time}</small>`;
+                }
+            }
+        }
+    }
+
+    updateModalContent() {
+        // Update emergency modal if visible
+        const modal = document.getElementById('emergencyModal');
+        if (modal && modal.style.display === 'block') {
+            const modalTitle = modal.querySelector('h2');
+            const acknowledgeBtn = document.getElementById('acknowledgeBtn');
+            const callEmergencyBtn = document.getElementById('callEmergencyBtn');
+            
+            if (modalTitle) {
+                modalTitle.textContent = this.currentLanguage === 'ar' ? '🚨 تنبيه طوارئ' : '🚨 Emergency Alert';
+            }
+            if (acknowledgeBtn) {
+                acknowledgeBtn.textContent = this.currentLanguage === 'ar' ? 'تأكيد التنبيه' : 'Acknowledge Alert';
+            }
+            if (callEmergencyBtn) {
+                callEmergencyBtn.textContent = this.currentLanguage === 'ar' ? 'الاتصال بخدمات الطوارئ' : 'Call Emergency Services';
+            }
+        }
     }
 
     translateMessage(messageKey) {
