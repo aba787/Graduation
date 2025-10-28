@@ -42,6 +42,20 @@
                     <div class="sensor-unit">%</div>
                     <div class="sensor-status normal" id="o2Status" data-ar="طبيعي" data-en="Normal">طبيعي</div>
                 </div>
+                
+                <div class="sensor-card">
+                    <h3 data-ar="🩺 ضغط الدم" data-en="🩺 Blood Pressure">🩺 ضغط الدم</h3>
+                    <div class="sensor-value" id="bloodPressure">120/80</div>
+                    <div class="sensor-unit" data-ar="مم زئبق" data-en="mmHg">مم زئبق</div>
+                    <div class="sensor-status normal" id="bpStatus" data-ar="طبيعي" data-en="Normal">طبيعي</div>
+                </div>
+                
+                <div class="sensor-card">
+                    <h3 data-ar="🍯 سكر الدم" data-en="🍯 Blood Glucose">🍯 سكر الدم</h3>
+                    <div class="sensor-value" id="glucose">95</div>
+                    <div class="sensor-unit" data-ar="مجم/ديسي" data-en="mg/dL">مجم/ديسي</div>
+                    <div class="sensor-status normal" id="glucoseStatus" data-ar="طبيعي" data-en="Normal">طبيعي</div>
+                </div>
             </div>
         </div>
 
@@ -85,6 +99,8 @@
                 <button id="simulateNormal" data-ar="علامات حيوية طبيعية" data-en="Normal Vitals">علامات حيوية طبيعية</button>
                 <button id="simulateLowHR" data-ar="معدل قلب منخفض" data-en="Low Heart Rate">معدل قلب منخفض</button>
                 <button id="simulateLowO2" data-ar="أكسجين منخفض" data-en="Low Oxygen">أكسجين منخفض</button>
+                <button id="simulateHighBP" data-ar="ضغط دم مرتفع" data-en="High Blood Pressure">ضغط دم مرتفع</button>
+                <button id="simulateHighGlucose" data-ar="سكر مرتفع" data-en="High Glucose">سكر مرتفع</button>
                 <button id="simulateCritical" data-ar="حالة حرجة" data-en="Critical Condition">حالة حرجة</button>
             </div>
         </div>

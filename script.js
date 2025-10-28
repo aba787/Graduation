@@ -3,6 +3,8 @@ class SmartHealthMonitor {
     constructor() {
         this.currentHeartRate = 75;
         this.currentBloodOxygen = 98;
+        this.currentBloodPressure = { systolic: 120, diastolic: 80 };
+        this.currentGlucose = 95;
         this.isMonitoring = true;
         this.alertHistory = [];
         this.emergencyContacts = [
@@ -14,8 +16,20 @@ class SmartHealthMonitor {
         this.thresholds = {
             heartRate: { min: 60, max: 100 },
             bloodOxygen: { min: 95, max: 100 },
-            critical: { heartRate: 50, bloodOxygen: 90 },
-            emergency: { heartRate: 40, bloodOxygen: 85 }
+            bloodPressure: { systolic: { min: 90, max: 140 }, diastolic: { min: 60, max: 90 } },
+            glucose: { min: 70, max: 140 },
+            critical: { 
+                heartRate: 50, 
+                bloodOxygen: 90,
+                bloodPressure: { systolic: 160, diastolic: 100 },
+                glucose: { min: 60, max: 180 }
+            },
+            emergency: { 
+                heartRate: 40, 
+                bloodOxygen: 85,
+                bloodPressure: { systolic: 180, diastolic: 110 },
+                glucose: { min: 50, max: 250 }
+            }
         };
 
         // Trend tracking for better prediction
@@ -68,19 +82,27 @@ class SmartHealthMonitor {
 
         // Enhanced simulation buttons
         document.getElementById('simulateNormal').addEventListener('click', () => {
-            this.simulateVitals(75, 98, "علامات حيوية طبيعية");
+            this.simulateVitals(75, 98, {systolic: 120, diastolic: 80}, 95, "علامات حيوية طبيعية");
         });
 
         document.getElementById('simulateLowHR').addEventListener('click', () => {
-            this.simulateVitals(45, 98, "معدل قلب منخفض");
+            this.simulateVitals(45, 98, {systolic: 120, diastolic: 80}, 95, "معدل قلب منخفض");
         });
 
         document.getElementById('simulateLowO2').addEventListener('click', () => {
-            this.simulateVitals(75, 88, "أكسجين منخفض");
+            this.simulateVitals(75, 88, {systolic: 120, diastolic: 80}, 95, "أكسجين منخفض");
+        });
+
+        document.getElementById('simulateHighBP').addEventListener('click', () => {
+            this.simulateVitals(75, 98, {systolic: 170, diastolic: 105}, 95, "ضغط دم مرتفع");
+        });
+
+        document.getElementById('simulateHighGlucose').addEventListener('click', () => {
+            this.simulateVitals(75, 98, {systolic: 120, diastolic: 80}, 200, "سكر مرتفع");
         });
 
         document.getElementById('simulateCritical').addEventListener('click', () => {
-            this.simulateVitals(40, 85, "حالة حرجة");
+            this.simulateVitals(40, 85, {systolic: 180, diastolic: 110}, 250, "حالة حرجة");
         });
 
         // Emergency modal buttons
@@ -129,18 +151,27 @@ class SmartHealthMonitor {
     }
 
     collectBiometricData() {
-        // More realistic biometric data simulation
+        // Only make small, realistic variations - no random emergency alerts
         const hrVariation = this.generateRealisticVariation(this.currentHeartRate, 'heartRate');
         const o2Variation = this.generateRealisticVariation(this.currentBloodOxygen, 'bloodOxygen');
+        const bpSysVariation = this.generateRealisticVariation(this.currentBloodPressure.systolic, 'bloodPressure');
+        const bpDiaVariation = this.generateRealisticVariation(this.currentBloodPressure.diastolic, 'bloodPressure');
+        const glucoseVariation = this.generateRealisticVariation(this.currentGlucose, 'glucose');
 
-        this.currentHeartRate = Math.max(30, Math.min(150, this.currentHeartRate + hrVariation));
-        this.currentBloodOxygen = Math.max(70, Math.min(100, this.currentBloodOxygen + o2Variation));
+        // Keep variations small and realistic - prevent random alerts
+        this.currentHeartRate = Math.max(65, Math.min(85, this.currentHeartRate + hrVariation * 0.3));
+        this.currentBloodOxygen = Math.max(96, Math.min(100, this.currentBloodOxygen + o2Variation * 0.2));
+        this.currentBloodPressure.systolic = Math.max(110, Math.min(130, this.currentBloodPressure.systolic + bpSysVariation * 0.4));
+        this.currentBloodPressure.diastolic = Math.max(70, Math.min(90, this.currentBloodPressure.diastolic + bpDiaVariation * 0.3));
+        this.currentGlucose = Math.max(85, Math.min(105, this.currentGlucose + glucoseVariation * 0.5));
 
         // Add to history for trend analysis
         this.vitalsHistory.push({
             timestamp: Date.now(),
             heartRate: this.currentHeartRate,
-            bloodOxygen: this.currentBloodOxygen
+            bloodOxygen: this.currentBloodOxygen,
+            bloodPressure: { ...this.currentBloodPressure },
+            glucose: this.currentGlucose
         });
 
         // Keep only recent history
@@ -152,13 +183,21 @@ class SmartHealthMonitor {
     generateRealisticVariation(currentValue, type) {
         const baseVariation = (Math.random() - 0.5) * 2;
         
-        if (type === 'heartRate') {
-            // Heart rate can vary more significantly
-            const stressVariation = Math.random() > 0.95 ? (Math.random() - 0.5) * 10 : 0;
-            return baseVariation + stressVariation;
-        } else {
-            // Blood oxygen is more stable
-            return baseVariation * 0.5;
+        switch (type) {
+            case 'heartRate':
+                // Small normal variations only
+                return baseVariation * 0.5;
+            case 'bloodOxygen':
+                // Blood oxygen is very stable
+                return baseVariation * 0.2;
+            case 'bloodPressure':
+                // Blood pressure normal variations
+                return baseVariation * 0.8;
+            case 'glucose':
+                // Glucose normal variations
+                return baseVariation * 1.2;
+            default:
+                return baseVariation * 0.3;
         }
     }
 
@@ -191,22 +230,37 @@ class SmartHealthMonitor {
     analyzeVitals() {
         const hrStatus = this.getVitalStatus(this.currentHeartRate, 'heartRate');
         const o2Status = this.getVitalStatus(this.currentBloodOxygen, 'bloodOxygen');
+        const bpStatus = this.getVitalStatus(this.currentBloodPressure, 'bloodPressure');
+        const glucoseStatus = this.getVitalStatus(this.currentGlucose, 'glucose');
 
-        // Enhanced critical condition detection
-        if (this.currentHeartRate <= this.thresholds.emergency.heartRate || 
-            this.currentBloodOxygen <= this.thresholds.emergency.bloodOxygen) {
+        // Only trigger emergency alerts for ACTUAL emergencies
+        const isEmergency = (
+            this.currentHeartRate <= this.thresholds.emergency.heartRate || 
+            this.currentBloodOxygen <= this.thresholds.emergency.bloodOxygen ||
+            this.currentBloodPressure.systolic >= this.thresholds.emergency.bloodPressure.systolic ||
+            this.currentBloodPressure.diastolic >= this.thresholds.emergency.bloodPressure.diastolic ||
+            this.currentGlucose <= this.thresholds.emergency.glucose.min ||
+            this.currentGlucose >= this.thresholds.emergency.glucose.max
+        );
+
+        const isCritical = (
+            this.currentHeartRate <= this.thresholds.critical.heartRate || 
+            this.currentBloodOxygen <= this.thresholds.critical.bloodOxygen ||
+            this.currentBloodPressure.systolic >= this.thresholds.critical.bloodPressure.systolic ||
+            this.currentBloodPressure.diastolic >= this.thresholds.critical.bloodPressure.diastolic ||
+            this.currentGlucose <= this.thresholds.critical.glucose.min ||
+            this.currentGlucose >= this.thresholds.critical.glucose.max
+        );
+
+        if (isEmergency) {
             this.triggerEmergencyAlert("⚠️ حالة طوارئ حرجة - تحتاج لعناية طبية فورية!");
             this.consecutiveAbnormalReadings++;
-        }
-        // Check for critical conditions
-        else if (this.currentHeartRate <= this.thresholds.critical.heartRate || 
-                this.currentBloodOxygen <= this.thresholds.critical.bloodOxygen) {
+        } else if (isCritical) {
             this.triggerEmergencyAlert("🚨 علامات حيوية حرجة تم اكتشافها - انتباه فوري مطلوب!");
             this.consecutiveAbnormalReadings++;
-        }
-        // Check for warning conditions
-        else if (hrStatus === 'warning' || o2Status === 'warning') {
-            this.triggerWarningAlert(`⚠️ علامات حيوية غير طبيعية - مراقبة دقيقة | القلب: ${Math.round(this.currentHeartRate)} | الأكسجين: ${Math.round(this.currentBloodOxygen)}%`);
+        } else if (hrStatus === 'warning' || o2Status === 'warning' || bpStatus === 'warning' || glucoseStatus === 'warning') {
+            const vitalsText = `القلب: ${Math.round(this.currentHeartRate)} | الأكسجين: ${Math.round(this.currentBloodOxygen)}% | الضغط: ${Math.round(this.currentBloodPressure.systolic)}/${Math.round(this.currentBloodPressure.diastolic)} | السكر: ${Math.round(this.currentGlucose)}`;
+            this.triggerWarningAlert(`⚠️ علامات حيوية غير طبيعية - مراقبة دقيقة | ${vitalsText}`);
             this.consecutiveAbnormalReadings++;
         } else {
             // Normal readings - reset counter
@@ -229,25 +283,50 @@ class SmartHealthMonitor {
             if (value <= this.thresholds.emergency.bloodOxygen) return 'emergency';
             if (value <= this.thresholds.critical.bloodOxygen) return 'critical';
             if (value < threshold.min) return 'warning';
+        } else if (type === 'bloodPressure') {
+            if (value.systolic >= this.thresholds.emergency.bloodPressure.systolic || 
+                value.diastolic >= this.thresholds.emergency.bloodPressure.diastolic) return 'emergency';
+            if (value.systolic >= this.thresholds.critical.bloodPressure.systolic || 
+                value.diastolic >= this.thresholds.critical.bloodPressure.diastolic) return 'critical';
+            if (value.systolic < threshold.systolic.min || value.systolic > threshold.systolic.max ||
+                value.diastolic < threshold.diastolic.min || value.diastolic > threshold.diastolic.max) return 'warning';
+        } else if (type === 'glucose') {
+            if (value <= this.thresholds.emergency.glucose.min || value >= this.thresholds.emergency.glucose.max) return 'emergency';
+            if (value <= this.thresholds.critical.glucose.min || value >= this.thresholds.critical.glucose.max) return 'critical';
+            if (value < threshold.min || value > threshold.max) return 'warning';
         }
 
         return 'normal';
     }
 
     updateDisplay() {
-        // Update heart rate display with enhanced status
+        // Update heart rate display
         document.getElementById('heartRate').textContent = Math.round(this.currentHeartRate);
         const hrStatus = this.getVitalStatus(this.currentHeartRate, 'heartRate');
         const hrStatusElement = document.getElementById('hrStatus');
         hrStatusElement.textContent = this.getArabicStatus(hrStatus);
         hrStatusElement.className = `sensor-status ${hrStatus}`;
 
-        // Update blood oxygen display with enhanced status
+        // Update blood oxygen display
         document.getElementById('bloodOxygen').textContent = Math.round(this.currentBloodOxygen);
         const o2Status = this.getVitalStatus(this.currentBloodOxygen, 'bloodOxygen');
         const o2StatusElement = document.getElementById('o2Status');
         o2StatusElement.textContent = this.getArabicStatus(o2Status);
         o2StatusElement.className = `sensor-status ${o2Status}`;
+
+        // Update blood pressure display
+        document.getElementById('bloodPressure').textContent = `${Math.round(this.currentBloodPressure.systolic)}/${Math.round(this.currentBloodPressure.diastolic)}`;
+        const bpStatus = this.getVitalStatus(this.currentBloodPressure, 'bloodPressure');
+        const bpStatusElement = document.getElementById('bpStatus');
+        bpStatusElement.textContent = this.getArabicStatus(bpStatus);
+        bpStatusElement.className = `sensor-status ${bpStatus}`;
+
+        // Update glucose display
+        document.getElementById('glucose').textContent = Math.round(this.currentGlucose);
+        const glucoseStatus = this.getVitalStatus(this.currentGlucose, 'glucose');
+        const glucoseStatusElement = document.getElementById('glucoseStatus');
+        glucoseStatusElement.textContent = this.getArabicStatus(glucoseStatus);
+        glucoseStatusElement.className = `sensor-status ${glucoseStatus}`;
 
         // Update device status
         this.updateDeviceStatus();
@@ -537,13 +616,15 @@ class SmartHealthMonitor {
         `).join('');
     }
 
-    simulateVitals(heartRate, bloodOxygen, scenario) {
+    simulateVitals(heartRate, bloodOxygen, bloodPressure, glucose, scenario) {
         this.currentHeartRate = heartRate;
         this.currentBloodOxygen = bloodOxygen;
+        this.currentBloodPressure = bloodPressure;
+        this.currentGlucose = glucose;
         this.analyzeVitals();
         this.updateDisplay();
         
-        console.log(`🧪 محاكاة السيناريو: ${scenario} - القلب: ${heartRate}, الأكسجين: ${bloodOxygen}%`);
+        console.log(`🧪 محاكاة السيناريو: ${scenario} - القلب: ${heartRate}, الأكسجين: ${bloodOxygen}%, الضغط: ${bloodPressure.systolic}/${bloodPressure.diastolic}, السكر: ${glucose}`);
     }
 
     performSystemHealthCheck() {
@@ -567,6 +648,8 @@ class SmartHealthMonitor {
     resetSystem() {
         this.currentHeartRate = 75;
         this.currentBloodOxygen = 98;
+        this.currentBloodPressure = { systolic: 120, diastolic: 80 };
+        this.currentGlucose = 95;
         this.consecutiveAbnormalReadings = 0;
         this.lastNormalTime = Date.now();
         this.vitalsHistory = [];
